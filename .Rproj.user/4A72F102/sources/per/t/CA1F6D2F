@@ -1,6 +1,6 @@
 {
     "id": "CA1F6D2F",
-    "path": "~/Desktop/econ_project_vjohnson/Documentation/code/source_code/data_appendix.Rmd",
+    "path": "~/Desktop/vjohnson_effect_of_corp_tax_on_unemployment/Documentation/code/source_code/data_appendix.Rmd",
     "project_path": "Documentation/code/source_code/data_appendix.Rmd",
     "type": "r_markdown",
     "hash": "1538357818",
@@ -13,7 +13,7 @@
         "source_window_id": "",
         "Source": "Source",
         "cursorPosition": "354,15",
-        "scrollLine": "344",
+        "scrollLine": "0",
         "docOutlineVisible": "1",
         "docOutlineSize": "111"
     },

@@ -1,6 +1,6 @@
 {
     "id": "4443227F",
-    "path": "~/Desktop/econ_project_vjohnson/Documentation/code/source_code/analysis_code.Rmd",
+    "path": "~/Desktop/vjohnson_effect_of_corp_tax_on_unemployment/Documentation/code/source_code/analysis_code.Rmd",
     "project_path": "Documentation/code/source_code/analysis_code.Rmd",
     "type": "r_markdown",
     "hash": "2382286495",
@@ -18,11 +18,11 @@
         "ignored_words": "multicollinearity,Brueckner\n"
     },
     "folds": "",
-    "lastKnownWriteTime": 1734638281,
+    "lastKnownWriteTime": 1734739256,
     "encoding": "UTF-8",
     "collab_server": "",
     "source_window": "",
-    "last_content_update": 1734638281,
+    "last_content_update": 1734739256,
     "read_only": false,
     "read_only_alternatives": []
 }
