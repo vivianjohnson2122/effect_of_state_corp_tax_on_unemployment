@@ -1,0 +1,368 @@
+---
+title: "Data Appendix"
+author: |
+  | Vivian Johnson
+   
+date: "14 December MMXXIIII"
+output:
+  pdf_document: default
+  word_document: default
+  html_document: default
+mainfont: Times New Roman
+classoption: 11pt
+geometry: margin=1in
+indent: 2m
+---
+
+# Data Descriptions
+The table below shows the names, descriptions, and source of the data used in this research project. 
+
+<summary><b></b></summary>
+
+| Variable                    | Description                                             | Source                |
+|-----------------------------|---------------------------------------------------------|-----------------------|
+| minimum_wage                |  In dollars per hour, `minimum_wage` represents the lowest amount a firm can pay employees. `minimum_wage` is not seasonally adjusted or adjusted for inflation. | U.S. Department of Labor, retrieved from FRED                             |
+|||
+| avg_corp_income_tax  | A tax imposed by U.S. states on income earned by a corporation. Not adjusted for inflation    | The Book of the States                                                    |
+|||
+| progressive_tax      | Different states may impose a flat corporate income tax (`progressive_tax` = 0) which indicates that corporations under the tax law all pay the same tax rate regardless of firm size or income earned. In other cases, a state may impose a progressive tax system (`progressive_tax` = 1) in which corporations adhere to different tax levels based on firm size or income earned.   | The Book of the States |
+|||
+| population           | In thousands of persons, `population` represents the number of residential persons living in a state in a given year.    | U.S. Census Bureau, retrieved from FRED |
+|||
+| avg_unemployment     | Expressed as a percent, `avg_unemployment` is the percent of the labor force in a state that is actively looking for work but unable to find a job.     | U.S. Bureau of Labor Statistics | 
+|||
+|gdp | Annual gross domestic product (GDP) by state and year. It is defined as the monetary value of all goods and services produced in all industries in a state in a given year. This particular measure is in millions of dollars (chained 2017 dollars) It is adjusted for inflation. | U.S. Bureau of Economic Analysis | 
+```{r echo=FALSE, warning=FALSE, message=FALSE}
+# loading in the data 
+library(tidyverse)
+library(stargazer)
+proj_data <- read_csv("../../data/analysis_data/full_project_data.csv")
+```
+
+# Minimum Wage 
+
+```{r echo=FALSE, warning=FALSE, message=FALSE, results='asis'}
+
+# Extract the variable as a dataframe
+minimum_wage_summary <- data.frame(minimum_wage = proj_data$minimum_wage)
+# Use stargazer to create the summary statistics table
+stargazer(minimum_wage_summary,
+          summary = TRUE,
+          header = FALSE,
+          median = TRUE,
+          title = "Summary Statistics for Minimum Wage",
+          label = "sum_min_wage")
+```
+
+
+Table \ref{sum_min_wage} describes the summary statistics for the minimum wage values described in the data. There are zero observations missing. \newline
+
+```{r echo=FALSE, warning=FALSE, message=FALSE}
+
+# histogram for minimum wage 
+min_wage_hist <- ggplot(data = proj_data,
+                        mapping = aes(x = minimum_wage)) +
+  geom_histogram(binwidth = 0.5,
+                 alpha = 0.7,
+                 fill="lightblue",
+                 color="black") +
+  theme_minimal() +
+  scale_x_continuous(
+    breaks = seq(1, 17,
+                 by = 1)
+    ) +
+  labs(
+    title = "Distribution of Minimum Wage",
+    x = "Minimum Wage",
+    y = "Frequency"
+  ) +
+  theme(
+    plot.title = element_text(hjust = 0.5, size = 12, family = "serif"),
+    axis.title = element_text(size = 12, family = "serif"),  # Style axis titles
+    axis.text.x = element_text(size = 10, vjust = 0.5, family = "serif")
+)
+
+min_wage_hist
+```
+
+From the distribution of minimum wage, one can see that it follows a relatively normal distribution aside from the two large spikes around 5 dollars per hour and 7 dollars per hour. This is likely due to the fact that some states didn't set their own laws for minimum wage, and followed the federal hourly minimum wage. The federal minimum wage from September 1997 to June 2007 was 5.15, and has remained at 7.25 as of July 2009. \newpage
+
+# Average Corporate Income Tax \newline
+```{r echo=FALSE, warning=FALSE, message=FALSE, results='asis'}
+# Extract the variable as a dataframe
+corp_tax_summary <- data.frame(avg_corp_income_tax = proj_data$avg_corp_income_tax)
+# Use stargazer to create the summary statistics table
+stargazer(corp_tax_summary,
+          summary = TRUE,
+          header = FALSE,
+          median = TRUE,
+          title = "Summary Statistics for Corporate Income Tax Rates",
+          label = "sum_corp_tax")
+```
+
+
+Table \ref{sum_corp_tax} shows the summary statistics for the average corporate income tax rates described in the data. There are zero observations missing. \newline
+
+```{r echo=FALSE, warning=FALSE, message=FALSE}
+
+# histogram for minimum wage 
+corp_tax_hist <- ggplot(data = proj_data,
+                        mapping = aes(x = avg_corp_income_tax)) +
+  geom_histogram(binwidth = 0.5,
+                 alpha = 0.7,
+                 fill="lightblue",
+                 color="black") +
+  theme_minimal() +
+  scale_x_continuous(
+    breaks = seq(0, 12,
+                 by = .5)
+    ) +
+  labs(
+    title = "Distribution of Corporate Income Tax Rates",
+    x = "Corporate Income Tax Rates",
+    y = "Frequency"
+  ) +
+  theme(
+    plot.title = element_text(hjust = 0.5, size = 12, family = "serif"),
+    axis.title = element_text(size = 12, family = "serif"),  # Style axis titles
+    axis.text.x = element_text(size = 10, vjust = 0.5, family = "serif", angle = 45)
+)
+
+corp_tax_hist
+```
+
+The distribution of corporate income tax rates, as seen above, is relatively normal. The spike at 0% represents those states that don't have a corporate income tax rate. These observations should not be dropped from the data, as they are important in showing the different effect that the policy may have on unemployment rates. \newpage
+
+# Population
+
+```{r echo=FALSE, warning=FALSE, message=FALSE, results='asis'}
+
+# Extract the variable as a dataframe
+pop_summary <- data.frame(population = proj_data$population)
+# Use stargazer to create the summary statistics table
+stargazer(pop_summary,
+          summary = TRUE,
+          header = FALSE,
+          median = TRUE,
+          title = "Summary Statistics for Population",
+          label = "sum_pop")
+```
+
+
+Table \ref{sum_pop} shows the summary statistics for the average corporate income tax rates described in the data. There are zero observations missing. \newline
+
+```{r echo=FALSE, warning=FALSE, message=FALSE}
+
+# histogram for minimum wage 
+pop_hist <- ggplot(data = proj_data,
+                        mapping = aes(x = population)) +
+  geom_histogram(alpha = 0.7,
+                 fill="lightblue",
+                 color="black") +
+  theme_minimal() +
+  labs(
+    title = "Distribution of Population",
+    x = "Population (thousands of people)",
+    y = "Frequency"
+  ) +
+  theme(
+    plot.title = element_text(hjust = 0.5, size = 12, family = "serif"),
+    axis.title = element_text(size = 12, family = "serif"),  # Style axis titles
+    axis.text.x = element_text(size = 10, vjust = 0.5, family = "serif")
+)
+
+pop_hist
+```
+
+The distribution for a state's population in a given year is evidently right skewed. This is likely due to the majority of states having similar populations (such as those in the mid west) and more populated states, such as California, New York, Florida skewing the distribution. The population of these states are important, but becuase of this skew, the transformation to log `population` was made in order to create a more linear relationship. 
+
+```{r echo=FALSE, warning=FALSE, message=FALSE}
+proj_data <- proj_data %>%
+  mutate(
+    log_pop = log(population)
+  )
+# histogram for minimum wage 
+lnpop_hist <- ggplot(data = proj_data,
+                        mapping = aes(x = log_pop)) +
+  geom_histogram(
+    alpha = 0.7,
+                 fill="lightblue",
+                 color="black") +
+  theme_minimal() +
+  labs(
+    title = "Distribution of ln(Population)",
+    x = "ln(Population)",
+    y = "Frequency"
+  ) +
+  theme(
+    plot.title = element_text(hjust = 0.5, size = 12, family = "serif"),
+    axis.title = element_text(size = 12, family = "serif"),  # Style axis titles
+    axis.text.x = element_text(size = 10, vjust = 0.5, family = "serif")
+)
+
+lnpop_hist
+```
+
+After transforming the population variable, it is much more normally distributed, thus creating a more linear relationship. \newpage
+
+# Gross Domestic Product 
+
+```{r echo=FALSE, warning=FALSE, message=FALSE, results='asis'}
+
+# Extract the variable as a dataframe
+gdp_summary <- data.frame(gdp = proj_data$gdp)
+# Use stargazer to create the summary statistics table
+stargazer(gdp_summary,
+          summary = TRUE,
+          header = FALSE,
+          median = TRUE,
+          title = "Summary Statistics for Gross Domestic Product",
+          label = "sum_gdp")
+```
+
+```{r echo=FALSE, warning=FALSE, message=FALSE}
+# histogram for minimum wage 
+gdp_hist <- ggplot(data = proj_data,
+                        mapping = aes(x = gdp)) +
+  geom_histogram(
+    alpha = 0.7,
+                 fill="lightblue",
+                 color="black") +
+  theme_minimal() +
+  labs(
+    title = "Distribution of GDP",
+    x = "GDP",
+    y = "Frequency"
+  ) +
+  theme(
+    plot.title = element_text(hjust = 0.5, size = 12, family = "serif"),
+    axis.title = element_text(size = 12, family = "serif"),  # Style axis titles
+    axis.text.x = element_text(size = 10, vjust = 0.5, family = "serif")
+)
+
+gdp_hist
+```
+
+Similar to other variables, the distribtuion of a state's GDP is also heavily skewed to the right. 
+```{r echo=FALSE, warning=FALSE, message=FALSE}
+proj_data <- proj_data %>%
+  mutate(
+    log_gdp = log(gdp)
+  )
+# histogram for minimum wage 
+lgdp_hist <- ggplot(data = proj_data,
+                        mapping = aes(x = log_gdp)) +
+  geom_histogram(
+    alpha = 0.7,
+                 fill="lightblue",
+                 color="black") +
+  theme_minimal() +
+  labs(
+    title = "Distribution of log(GDP)",
+    x = "log(GDP)",
+    y = "Frequency"
+  ) +
+  theme(
+    plot.title = element_text(hjust = 0.5, size = 12, family = "serif"),
+    axis.title = element_text(size = 12, family = "serif"),  # Style axis titles
+    axis.text.x = element_text(size = 10, vjust = 0.5, family = "serif")
+)
+
+lgdp_hist
+```
+
+The distribution of `log_gdp` is now more normally distributed, which will lead to more accurate results. \newpage  
+
+# Average Unemployment Rate 
+
+```{r echo=FALSE, warning=FALSE, message=FALSE, results='asis'}
+
+# Extract the variable as a dataframe
+unemp_summary <- data.frame(avg_unemployment = proj_data$avg_unemployment)
+# Use stargazer to create the summary statistics table
+stargazer(unemp_summary,
+          summary = TRUE,
+          header = FALSE,
+          median = TRUE,
+          title = "Summary Statistics for Average Unemployment",
+          label = "sum_unemp")
+```
+
+
+Table \ref{sum_unemp} shows the summary statistics for the average corporate income tax rates described in the data. There are zero observations missing. \newline
+
+```{r echo=FALSE, warning=FALSE, message=FALSE}
+# histogram for minimum wage 
+unemp_hist <- ggplot(data = proj_data,
+                        mapping = aes(x = avg_unemployment)) +
+  geom_histogram(alpha = 0.7,
+                 fill="lightblue",
+                 color="black") +
+  theme_minimal() +
+  labs(
+    title = "Distribution of Average Unemployment Rate",
+    x = "Unemployment Rate",
+    y = "Frequency"
+  ) +
+  theme(
+    plot.title = element_text(hjust = 0.5, size = 12, family = "serif"),
+    axis.title = element_text(size = 12, family = "serif"),  # Style axis titles
+    axis.text.x = element_text(size = 10, vjust = 0.5, family = "serif")
+)
+
+unemp_hist
+```
+
+The distribution above shows the spread of the unemployment rate by state and year in the data. It is apparent that the data is right skewed, so it was decided to log the unemployment rate to create a more linear relationship. 
+
+
+```{r echo=FALSE, message=FALSE, warning=FALSE}
+proj_data <- proj_data %>%
+  mutate(
+    log_unemp = log(avg_unemployment)
+  )
+
+
+lunemp_hist <- ggplot(data = proj_data,
+                        mapping = aes(x = log_unemp)) +
+  geom_histogram(alpha = 0.7,
+                 fill="lightblue",
+                 color="black") +
+  theme_minimal() +
+  labs(
+    title = "Distribution of Log(Unemployment)",
+    x = "Log(Unemployment)",
+    y = "Frequency"
+  ) +
+  theme(
+    plot.title = element_text(hjust = 0.5, size = 12, family = "serif"),
+    axis.title = element_text(size = 12, family = "serif"),  # Style axis titles
+    axis.text.x = element_text(size = 10, vjust = 0.5, family = "serif")
+)
+
+lunemp_hist
+```
+
+After taking the log of unemployment rate, the data is much more normally distributed. Thus, the log of unemployment rate will serve as the dependent variable. 
+
+
+```{r results='asis', echo=FALSE}
+proj_data <- as.data.frame(proj_data)
+
+numeric_data <- proj_data %>%
+  select(where(is.numeric), -progressive_tax,
+         -population, -gdp, -log_unemp,
+         -year)
+
+stargazer(
+  numeric_data,
+  summary = TRUE,
+  header = FALSE,
+  median = TRUE,
+  title = "Summary Statistics for Numeric Variables",
+  digits = 2
+
+)
+```
+
+

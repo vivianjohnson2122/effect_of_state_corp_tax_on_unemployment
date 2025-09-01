@@ -1,0 +1,260 @@
+---
+title: "The Effect of State Corporate Taxes on Unemployment Rates"
+author: |
+  | Vivian Johnson
+  | Department of Economics
+  | St. Lawrence University
+  | 23 Romoda Drive 
+  | Canton, New York 13617
+   
+date: "14 December MMXXIIII"
+output:
+  pdf_document: default
+  word_document: default
+  html_document: default
+mainfont: Times New Roman
+classoption: 11pt
+geometry: margin=1in
+abstract: |-
+  The relationship between state corporate income tax rates and unemployment remains muddled and not as well understood. It is a topic of much debate and conflicting statistical evidence. This paper looks at how state corporate taxes might affect unemployment rates in the individual states in the U.S. from the years 1997-2023. Using this panel data and a fixed effects model, the results do not indicate a significant relationship between corporate income tax rates and state unemployment. \textbf{JEL codes:} C23, H25, J68 \textbf{Keywords:} Fixed Effects Panel Model, Corporate Income Tax, Unemployment 
+
+---
+
+
+```{r echo=FALSE, warning=FALSE, message=FALSE}
+# loading in packages
+library(tidyverse)
+library(stargazer)
+library(plm)
+
+# loading in data 
+tax_unemployment_data <- read_csv("../../data/analysis_data/full_project_data.csv")
+```
+
+# Introduction 
+
+The trade off between corporate income tax rate and employment is one that is heavily debated and thought about. State governments often face a precarious challenge in balancing the revenue generated from corporate income taxes with the impact that has on employment rates. The state corporate income tax is a tax that is levied on the net business profits made by corporations. This is a tax that is paid on top of the federal corporate income tax. The purpose of corporate taxes is to generate revenue for the state while also creating competition in the market (Urban-Brookings Tax Policy Center 2024). 
+
+Economic theory has historically suggested that with higher corporate income taxes, firms have less of an incentive to hire new workers, as they are giving up more of their profits (Brueckner 2013). These taxes could be beneficial to the state, as they can help fund public services and infrastructure. 
+
+Unemployment rates are an important indicator of an economy's health because it reflects the overall demand for workers and the economic activity within a state or country ((U.S. Bureau of Labor Statistics 2017)). Therefore, high unemployment rates correspond to less economic growth and economic activity, indicating that the economy is in poor health (International Labor Office 2010). Unemployment is one of the key targets of both monetary and fiscal policy, therefore it is incredibly important to understand the factors that shape it. 
+
+In the age of recovering from the COVID recession, it is interesting to look at how unemployment has changed in conjunction with corporate taxes. In the aftermath of the recession, how did state governments respond? There is a unique relationship between trying to spur economic activity by making operations cheaper for corporations so they can hire more workers, or raising taxes to raise revenue for states. 
+
+This paper evaluates the effect of state corporate income taxes on unemployment rates in the U.S. states in a given year. Data on different variables are collected for each state for the years 1997-2023 and put into a fixed effects model. The results of this could be useful to policy makers and governments attempting to balance the relationship, and could also be useful in understanding how firms make decisions. 
+
+# Literature Review 
+
+Economic literature lacks a foundational understanding of the effect of corporate tax rates on unemployment, as well as who truly pays the burden of the tax. However, theoretically, economists generally agree that firms act in their own self-interest, in other words, strive to generate the most money at the lowest cost (Brueckner 2013). Therefore, it makes sense to reason that increases in corporate taxes act as a higher cost to firms and would lead to decreasing the amount of workers they hire as well as wages.
+
+In his review of literature conducted on the effect of state tax incentives on business operations and economic activity, Buss (2001) found that while studies on the implication of tax policies are increasing and becoming more econometrically focused, there is insufficient evidence to the extent to which state taxes effect economic growth. While his review of the literature did not look directly at state unemployment rates, unemployment can be understood as a delayed indicator of economic growth, meaning that low economic growth can be seen in periods of high unemployment.  
+
+There are limited studies that have looked explicitly at the relationship between unemployment rate and state’s corporate income tax rates, and the ones that do vary in statistical significance and have issues with being able to draw concrete conclusions from sufficient evidence. Le and Elliott (2023) found that after doing a fixed effects and random effect model using panel data from the United States for the years 2006-2022, state corporate income tax rates are positively correlated with unemployment rates in a given year and state. "A 1% increase in the corporate income
+tax rate is correlated with an increase of 0.551% in the state unemployment
+rate" (Le and Elliot 2023). However, while they had significance at the 0.1 level, they had multiple concerns regarding multicollinearity and a lack of sufficient control variables. 
+
+Shuai and Chmura (2013), while examining the relationship between state corporate income rates and job creation, found that state corporate tax rates had “negative and significant effect on the pact of state employment growth”.  Their results, agreeing with economic theory, insinuate that higher corporate income taxes reduce employment growth because the tax acts as another cost to businesses. Therefore, firms are more likely to hire less workers. (Shuai and Chmura 2013).
+
+All in all, the literature is divided and vague when studying the effect that state corporate taxes have on the unemployment rates of individual states. This study helps contribute to the topic by looking at recent data, and includes more controls such as a states real gross domestic product and population, to control for the size and individual economies of the states, which hasn’t always been the case in previous studies. As most of the studies were conducted in the wake of the Great Recession, this data tells the full story of the aftermath of both the Great Recession as well as COVID.
+
+# Methodology
+
+In this model, the primary relationship we wish to study is the one between the corporate income tax in a given state, $i$, in year $t$ and the state's unemployment rate in that year. As this is a fixed effects panel model, $\alpha_i$ is used to control for factors that are specific to individual states but does not vary over time. $u_{it}$ is used to control for variables that vary across both state and year that are correlated with the unemployment rate. 
+
+$$
+\begin{aligned}
+UnemploymentRt_{it}& = \beta_0 + \beta_1(CorporateIncomeTax)_{i,t-1} + \beta_2Log(Population)_{it}\\
+                    & + \beta_3(MinimumWage)_{it} + \beta_4Log(GDP)_{it} + \alpha_i + u_{it}
+\end{aligned}
+$$
+The variables `population` and `gdp` were transformed using a natural logarithm in order to account for their right-skewed distributions and to better approximate a normal distribution. This transformation allows for more accurate analysis and predictors. 
+
+Taking the lag of the corporate income tax allows the model to account for the delayed impact that changes in the state's corporate tax policy may have on unemployment rate, which could be useful as the affect of many economic policies often aren't seen instantly. 
+
+# Data 
+
+The dependent variable in this project is the average unemployment rate for a particular state in a given year. In designing a model used to predict average unemployment rate, the following independent variables were included: the minimum wage rate in a state for that year, the state's corporate income tax rate for that year (it is important to note that for states with a progressive tax system, an average corporate income tax was calculated based on the different tax brackets), the state's real GDP (millions of chained 2017 dollars), and the population (in thousands of persons). 
+
+The data used in this project comes from various sources described in the table below:
+
+<summary><b></b></summary>
+
+| Variable                  | Source                                             |
+|---------------------------|----------------------------------------------------|
+| minimum_wage              | U.S. Department of Labor, retrieved from FRED      |
+| avg_corp_income_tax       | The Book of the States                             |
+| population                | U.S. Census Bureau, retrieved from FRED            |
+| avg_unemployment          | U.S. Bureau of Labor Statistics                    | 
+| gdp                       | U.S. Bureau of Economic Analysis                   | 
+
+
+
+```{r results='asis', echo=FALSE}
+# creating a log of the population variable
+tax_unemployment_data <- tax_unemployment_data %>%
+  mutate(
+    log_population = log(population),
+    log_gdp = log(gdp),
+    log_unemp = log(avg_unemployment)
+  )
+
+tax_unemployment_data <- as.data.frame(tax_unemployment_data)
+
+numeric_data <- tax_unemployment_data %>%
+  select(where(is.numeric), -progressive_tax,
+         -population, -gdp, -log_unemp,
+         -year)
+
+stargazer(
+  numeric_data,
+  summary = TRUE,
+  header = FALSE,
+  median = TRUE,
+  title = "Summary Statistics for Numeric Variables",
+  digits = 2
+
+)
+```
+
+The table above shows the summary statistics across all years and states for the numeric variables that are used in the model. It is important to note that a value of $0$ for state corporate tax rate is accepted and used in analysis. A corporate rate of zero captures instances where a state doesn't impose an additional tax on corporations, which provides useful information for understanding the different in state policies. 
+
+```{r echo=FALSE}
+tax_unemployment_data %>% group_by(year) %>%
+  summarize(avg = mean(avg_unemployment)) %>%
+ggplot(data = .,
+       mapping = aes(x = year,
+                     y = avg)) +
+  geom_line() +
+  labs(title = "Average Unemployment Rate by Year",
+       y="Average Unemployment Rate",
+       x = "Year") +
+  theme_minimal()
+```
+ 
+The graph above illustrates the trend of unemployment, which in this paper is aimed to be measured using the state's `corporate tax`, `minimum wage`, `population`, and `gdp`. There is significant variation in unemployment, which can be caused by a multitude of different economic and random factors such as recessions, policy changes, and other shocks. 
+
+\newpage 
+# Results and Inferences 
+
+```{r warning=FALSE, message=FALSE, echo=FALSE}
+
+tax_unemployment_data <- pdata.frame(tax_unemployment_data,
+                                     index = c("state", "year"))
+
+tax.fe.reg <- plm(avg_unemployment ~
+                lag(avg_corp_income_tax, 1)+
+                minimum_wage +
+                log_gdp +
+                log_population,
+              data = tax_unemployment_data,
+              model = "within",
+              effect = "twoways")
+```
+
+```{r warning=FALSE, message=FALSE, echo=FALSE}
+# Running the Random effects model 
+tax.re.reg <- plm(avg_unemployment ~
+                lag(avg_corp_income_tax, 1)+
+                minimum_wage +
+                log_gdp +
+                log_population,
+              data = tax_unemployment_data,
+              model = "random",
+              effect = "twoways")
+```
+
+```{r warning=FALSE, message=FALSE, echo=FALSE}
+# hausman test 
+hausman_test <- phtest(tax.fe.reg, tax.re.reg)
+```
+
+```{r results='asis', warning=FALSE, message=FALSE, echo=FALSE}
+hausman_stat <- hausman_test$statistic
+hausman_df <- hausman_test$parameter
+hausman_p <- "2.2e-16"
+
+hausman_results <- data.frame(
+  "Test Statistic" = round(as.numeric(hausman_stat), 3),
+  "Degrees of Freedom" = hausman_df,
+  "P-Value" = hausman_p
+)
+
+
+stargazer(tax.fe.reg,
+          tax.re.reg,
+          summary = FALSE,
+          header = FALSE,
+          column.labels = c("FE", "RE"),
+          title = "Regression Results")
+          
+          
+stargazer(
+  hausman_results,
+  summary = FALSE,
+  header = FALSE,
+  rownames = FALSE,
+  title = "Hausman Test Results"
+)
+```
+
+ 
+
+From the results of both the fixed effect and random effect regressions, there is insufficient evidence to conclude that a state's corporate income tax has any significant effect on the unemployment rate in that state. The coefficient on the lagged average corporate income tax variable indicates a lack of statistical significance. It also suggests that perhaps the level of corporate taxes don't vary enough over time for the coefficient to turn out significant, which is a potential limitation of this model. 
+
+After comparing the fixed effects and the random effects model, with evidence from the Hausman test, we reject the null hypothesis that both models are consistent. Given a p-value of $2.2*10^{-16}$, there is sufficient evidence that the random effects model is inconsistent, as the fixed effects are correlated with the other  independent variables in the model. 
+
+The coefficients for `log_population`, `log_gdp`, and `minimum_wage` were all significant predictors. The coefficient of `log_population` indicates that, on average, a 1% increase in the population of a state is associated with a 0.05115 percentage point increase in the unemployment rate, holding all other variables in the model constant. 
+
+The coefficient of `log_gdp` suggests that, on average, a 1% increase in the gross domestic product of a state is associated with a 0.05452 percentage point decrease in the unemployment rate, holding all other variables in the model constant. 
+
+Finally, a coefficient on `minimum_wage` of $0.041$ implies that, on average, each additional dollar increase in the state minimum wage is associated with a $0.041$ percentage point increase in the unemployment rate, holding all other variables in the model constant. This makes sense given that the minimum wage is an added cost that the corporation would have to pay, which would mean to make up for this added cost, they may pay the workers less. 
+
+# Conclusion 
+
+In conclusion, this study works to determine if there is a relationship between the rate at which state's impose corporate income taxes and the subsequent level of unemployment in that state. Using state wide data from 1997-2023, an analysis of a fixed effects model suggests that there is not enough evidence to conclude that corporate tax rates have a positive or negative effect on a state's unemployment. The lack of significance is not unheard of based on the previous literature on this topic, but could be because of a lack of variance among the corporate tax levels over the course of the study. 
+
+The coefficients in the model that were significant, however, give some insight into the relationship between minimum wage, population, and gross domestic product on unemployment rates.  
+
+This paper suggests that other factors and governmental policies are most likely more influential on a state's unemployment rate rather than the corporate tax rate. Regardless of the insignificance of the corporate tax rate, it contributes to previous studies done as it was conducted with recent data and further highlights the need for more research to be done under this topic, as the results across studies varies. 
+
+\newpage 
+# Bibliography 
+
+Brueckner, Martin. "Profit Maximization." In Encyclopedia of Corporate Social Responsibility, 2013.
+
+
+Bureau of Economic Analysis. Regional Economic Accounts - Previously Published Estimates. Various Years. Accessed December 14, 2024. https://apps.bea.gov/histdatacore/Regional_Accounts_new.html.
+
+
+Bureau of Labor Statistics. Quarterly Census of Employment and Wages. Accessed December 14, 2024. https://www.bls.gov/cew/.
+
+
+Bureau of Labor Statistics. "Why the Unemployment Rate Still Matters." The Economics Daily, U.S. Bureau of Labor Statistics, August 17, 2017. Accessed December 14, 2024. https://www.bls.gov/blog/2017/why-the-unemployment-rate-still-matters.htm.
+
+Buss, Terry F. "The Effect of State Tax Incentives on Economic Growth and Firm Location Decisions: An Overview of the Literature." Economic Development Quarterly 15, no. 1 (February 2001): 90–105. https://doi.org/10.1177/089124240101500106.
+
+
+Census Bureau. *Resident Population*. Retrieved from FRED, Federal Reserve Bank of St. Louis, Various Issues. Accessed December 14, 2024. https://fred.stlouisfed.org/.
+
+Council of State Governments. *Book of the States*. Various Years.
+
+Croissant, Yves, and Giovanni Millo. "Panel Data Econometrics in R: The plm Package." Journal of Statistical Software 27, no. 2 (2008): 1–43. https://doi.org/10.18637/jss.v027.i02.
+
+
+Department of Labor. *Minimum Hourly Wage for Nonfarm Workers for the United States*. Retrieved from FRED, Federal Reserve Bank of St. Louis, Various Issues. Accessed December 14, 2024. https://fred.stlouisfed.org/series/FEDMINNFRWG.
+
+Hlavac, Marek. stargazer: *Well-Formatted Regression and Summary Statistics Tables*. R package version 5.2.3, 2022. https://CRAN.R-project.org/package=stargazer.
+  
+  
+International Labor Office. Global Employment Trends, January 2010. Geneva: International Labor Office, 2010.
+
+
+Le, Tuan Viet, and Kyle Elliott. "The Effects of Income Tax on the Unemployment Rate in the United States." Ekonomski Horizonti 25, no. 2 (May–August 2023): 135–148. https://doi.org/10.5937/ekonhor2302135L.
+
+
+Shuai, Xiaobing, and Christine Chmura. "The Effect of State Corporate Income Tax Rate Cuts on Job Creation." School of Professional and Continuing Studies Faculty Publications, no. 56 (2013). http://scholarship.richmond.edu/spcs-faculty-publications/56.
+
+
+Urban-Brookings Tax Policy Center. "How Do State and Local Corporate Income Taxes Work?" Tax Policy Center. Accessed December 14, 2024. https://taxpolicycenter.org/briefing-book/how-do-state-and-local-corporate-income-taxes-work.
+
+Wickham, Hadley, Mara Averick, Jennifer Bryan, et al. "Welcome to the tidyverse." Journal of Open Source Software 4, no. 43 (2019): 1686. https://doi.org/10.21105/joss.01686.
